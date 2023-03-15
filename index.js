@@ -1,9 +1,9 @@
 const http = require("http");
 const app = require("./app");
-const {PORT} = require("./utils/config");
+const { PORT } = require("./utils/config");
 
 const server = http.createServer(app);
 
-server.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-})
+server.listen(PORT || 3001, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
