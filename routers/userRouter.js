@@ -2,6 +2,7 @@ const userRouter = require("express").Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
+const { findFriendsOfFriends } = require("../utils/functions");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -138,6 +139,19 @@ userRouter.post("/findByCurrent", async (req, res) => {
 userRouter.get("/logout", (req, res) => {
   req.logout();
   res.status(200).json({ message: "LOGGED OUT" });
+});
+
+userRouter.get("/:id/recommendedFriends", async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findById(id).populate({
+    path: "friends",
+    populate: { path: "friends" },
+  });
+
+  const friendsOfFriends = findFriendsOfFriends(user);
+
+  res.json(friendsOfFriends);
 });
 
 module.exports = userRouter;
