@@ -24,6 +24,7 @@ const findFriendsOfFriends = (user) => {
       id: rec.id,
       username: rec.username,
       mutuals: mutualFriends(user, rec),
+      profilePicture: rec.profilePicture,
     };
   });
 
