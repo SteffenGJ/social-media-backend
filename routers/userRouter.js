@@ -24,6 +24,11 @@ userRouter.post("/", async (req, res) => {
     posts: [],
     profilePicture:
       "https://user-images.githubusercontent.com/11250/39013954-f5091c3a-43e6-11e8-9cac-37cf8e8c8e4e.jpg",
+    incommingFriendRequests: [],
+    outgoingFriendRequests: [],
+    hasLiked: [],
+    coverImage:
+      "https://www.macmillandictionary.com/us/external/slideshow/full/Grey_full.png",
   });
 
   const savedUser = await user.save();
@@ -62,6 +67,14 @@ userRouter.get("/:id/friendRequests", async (req, res) => {
   console.log(user);
 
   res.json(user.incommingFriendRequests);
+});
+
+userRouter.get("/:id/outgoingFriendRequests", async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findById(id).populate("outgoingFriendRequests");
+
+  res.json(user.outgoingFriendRequests);
 });
 
 userRouter.post(
@@ -107,7 +120,7 @@ userRouter.post("/:id/acceptFriend", async (req, res) => {
   await requestee.save();
   await requester.save();
 
-  res.json(requestee);
+  res.json(requestee.id);
 });
 
 userRouter.post("/friendRequest", async (req, res) => {
@@ -122,7 +135,7 @@ userRouter.post("/friendRequest", async (req, res) => {
   await requester.save();
   await requestee.save();
 
-  res.json({ potentialFriend: requestee });
+  res.json({ potentialFriend: requestee.id });
 });
 
 userRouter.post("/findByCurrent", async (req, res) => {

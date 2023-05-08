@@ -65,7 +65,8 @@ passport.deserializeUser(async (id, done) => {
 
 app.get("/api/error", (req, res) => {
   console.log(req);
-  res.send("error");
+  console.log("THE ABOVE IS MINE BTW. KH /API/ERROR");
+  res.status(400).json({ status: 400, message: "error" });
 });
 app.use(
   "/api/login",

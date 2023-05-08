@@ -8,18 +8,34 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 postRouter.get("/", async (req, res) => {
-  const post = await Post.find({})
-    .populate({ path: "author" })
-    .populate({ path: "comments", populate: { path: "author" } });
+  const post = await Post.find({});
+  //.populate({ path: "author" })
+  //.populate({ path: "comments", populate: { path: "author" } });
   console.log(post);
   res.json(post);
 });
 
+postRouter.get("/:id/comments", async (req, res) => {
+  const { id } = req.params;
+
+  const post = await Post.findById(id).populate("comments");
+
+  res.json(post.comments);
+});
+
 postRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const posts = await Post.find({ author: id })
-    .populate({ path: "author" })
-    .populate({ path: "comments", populate: { path: "author" } });
+
+  const post = await Post.findById(id);
+
+  res.json(post);
+});
+
+postRouter.get("/user/:id", async (req, res) => {
+  const { id } = req.params;
+  const posts = await Post.find({ author: id });
+  //.populate({ path: "author" })
+  //.populate({ path: "comments", populate: { path: "author" } });
   res.json(posts);
 });
 
@@ -66,7 +82,7 @@ postRouter.post("/", upload.single("postImage"), async (req, res) => {
   const user = await User.findById(authorId);
   user.posts.push(createPost.id);
   await user.save();
-  const savedPost = await Post.findById(createPost.id).populate("author");
+  const savedPost = await Post.findById(createPost.id); /*.populate("author")*/
 
   console.log("SAVEDPOST", savedPost);
   console.log("CREATEPOST", createPost);
